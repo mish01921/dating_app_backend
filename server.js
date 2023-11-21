@@ -45,16 +45,21 @@ app.post("/dating/cards", async (req, res) => {
     }
 });
   
-  app.get("/dating/cards", (req, res) => {
-    console.log("Received GET request"); // Add log statement
-    Cards.find((err, data) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
-        res.status(200).send(data);
-      }
-    });
-  });
+app.get("/dating/cards", async (req, res) => {
+  console.log("Received GET request");
+
+  try {
+    // Using async/await to wait for the result of the Mongoose find operation
+    const data = await Cards.find();
+
+    // Sending a 200 OK response with the retrieved data
+    res.status(200).send(data);
+  } catch (err) {
+    // If there's an error, sending a 500 Internal Server Error response with the error details
+    res.status(500).send(err.message);
+  }
+});
+
   
 
 app.listen(port, () => console.log(`Listening on localhost: ${port}`));
